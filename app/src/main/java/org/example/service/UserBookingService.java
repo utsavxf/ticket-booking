@@ -27,13 +27,21 @@ public class UserBookingService {
     //and aslo object se json me daalne ke liye serialize karna padega and vice-versa de-serialize karna padega
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    public List<User> loadUsers() throws IOException{
+        File users = new File(USERS_PATH); //I have plain text in this users
+        return objectMapper.readValue(users, new TypeReference<List<User>>() {
+        });
+    }
+
+    //default constructor
+    public UserBookingService() throws IOException{
+       loadUsers();
+    }
 
     public UserBookingService(User user1) throws IOException {
         this.user = user1;
         File users = new File(USERS_PATH); //I have plain text in this users
-        userList = objectMapper.readValue(users, new TypeReference<List<User>>() {
-        }); //List expects a generic type E, you can check so to provide a specific type (User) at runtime we need to do this})
-
+        loadUsers();
     }
 
     public Boolean loginUser(){
@@ -56,6 +64,10 @@ public class UserBookingService {
     private void saveUserListToFile() throws IOException{
         File usersFile=new File(USERS_PATH);
         objectMapper.writeValue(usersFile,userList); //here serialization is taking place
+    }
+
+    public void fetchBookings(){
+        user.printTickets();
     }
 
 }
